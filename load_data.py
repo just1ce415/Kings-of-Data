@@ -9,7 +9,7 @@ if platform.system() == "Windows":
 else:
     DEL = "/"
 
-DATASET = "test"
+DATASET = "train"
 
 async def download_image(session, url, save_path):
     async with session.get(url) as response:
@@ -21,11 +21,17 @@ async def download_image(session, url, save_path):
                 file.write(chunk)
 
 async def download_images(urls):
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=6000)) as session:
         tasks = []
-        for idx, (url1, url2) in enumerate(urls, start=0):
-            save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{idx}.jpg'
-            save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{idx}.jpg'
+        for idx, value in enumerate(urls, start=0):
+            if DATASET == "train":
+                url1, url2, label = value
+                save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{idx}_{label}.jpg'
+                save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{idx}_{label}.jpg'
+            else:
+                url1, url2 = value
+                save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{idx}.jpg'
+                save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{idx}.jpg'
             task1 = asyncio.ensure_future(download_image(session, url1, save_path1))
             task2 = asyncio.ensure_future(download_image(session, url2, save_path2))
             tasks.extend([task1, task2])
@@ -37,7 +43,10 @@ def main(csv_path):
     with open(csv_path, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            urls.append((row[1], row[2]))
+            if DATASET == "train":
+                urls.append((row[0], row[1], row[2]))
+            else:
+                urls.append((row[1], row[2]))
     urls.pop(0)
 
     # Create output directories if they don't exist
@@ -49,4 +58,4 @@ def main(csv_path):
     loop.run_until_complete(download_images(urls))
 
 if __name__ == '__main__':
-    main(f"data{DEL}{DATASET}{DEL}test.csv")
+    main(f"data{DEL}{DATASET}{DEL}{DATASET}.csv")
