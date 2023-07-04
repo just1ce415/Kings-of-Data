@@ -9,7 +9,7 @@ if platform.system() == "Windows":
 else:
     DEL = "/"
 
-DATASET = "train"
+DATASET = "test"
 
 async def download_image(session, url, save_path):
     async with session.get(url) as response:
