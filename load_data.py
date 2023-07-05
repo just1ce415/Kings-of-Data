@@ -29,9 +29,9 @@ async def download_images(urls):
                 save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{idx}_{label}.jpg'
                 save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{idx}_{label}.jpg'
             else:
-                url1, url2 = value
-                save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{idx}.jpg'
-                save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{idx}.jpg'
+                id, url1, url2 = value
+                save_path1 = f'data{DEL}{DATASET}{DEL}first{DEL}{id}.jpg'
+                save_path2 = f'data{DEL}{DATASET}{DEL}second{DEL}{id}.jpg'
             task1 = asyncio.ensure_future(download_image(session, url1, save_path1))
             task2 = asyncio.ensure_future(download_image(session, url2, save_path2))
             tasks.extend([task1, task2])
@@ -46,7 +46,7 @@ def main(csv_path):
             if DATASET == "train":
                 urls.append((row[0], row[1], row[2]))
             else:
-                urls.append((row[1], row[2]))
+                urls.append((row[0], row[1], row[2]))
     urls.pop(0)
 
     # Create output directories if they don't exist

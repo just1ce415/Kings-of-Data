@@ -51,7 +51,7 @@ class ImagePairDataset(Dataset):
         image2 = torch.from_numpy(image2).float()
         if self.transform:
             image1 = self.transform(image1)
-            image2 = self.transform(image1)
+            image2 = self.transform(image2)
 
         return image1, image2, label
 

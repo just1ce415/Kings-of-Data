@@ -1,0 +1,9 @@
+1) GMM based on distances (unpurevised, inference-only, computationally cheap)
+
+2) self-supervised CNN (jigsaw puzzle)
+
+3) self-supervised BERT (Language modelling)
+
+4) Dedicated CNN - Siamese Neural Network
+
+5) Combination of 2 and 4.
