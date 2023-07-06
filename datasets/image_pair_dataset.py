@@ -33,6 +33,8 @@ class ImagePairDataset(Dataset):
         image1 = cv2.imread(f"{self.datadir}{DEL}first{DEL}{index}{self.label_prefix1}.jpg")
         if image1 is not None:
             label = 1
+            if self.label_prefix1 == "":
+                label = index
             image2 = cv2.imread(f"{self.datadir}{DEL}second{DEL}{index}{self.label_prefix1}.jpg")
             if image2 is None:
                 return self.__getitem__((index+1) % self.__len__())
